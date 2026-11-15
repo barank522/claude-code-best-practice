@@ -185,7 +185,13 @@ function loadToken() {
   } catch {}
   const abc = 'abcdefghjkmnpqrstuvwxyz23456789';
   const t = Array.from(crypto.randomBytes(12), (b) => abc[b % abc.length]).join('');
-  fs.writeFileSync(TOKEN_FILE, t, { mode: 0o600 });
+  try {
+    fs.writeFileSync(TOKEN_FILE, t, { mode: 0o600, flag: 'wx' });
+  } catch (e) {
+    // İki oturum aynı anda başlattıysa diğerinin yazdığı token geçerli olsun.
+    if (e.code === 'EEXIST') return fs.readFileSync(TOKEN_FILE, 'utf8').trim();
+    throw e;
+  }
   return t;
 }
 
@@ -236,16 +242,26 @@ function main() {
   // Mobil ağlar ve tüneller boşta kalan bağlantıyı keser; ara ara ping at.
   setInterval(() => { for (const c of clients) c.write(': ping\n\n'); }, 20000);
 
-  server.on('error', (e) => {
-    console.error(e.code === 'EADDRINUSE' ? `Port ${PORT} dolu. Sunucu zaten çalışıyor olabilir.` : e.message);
-    process.exit(1);
-  });
-  server.listen(PORT, HOST, () => {
+  const printLinks = () => {
     const ips = Object.values(os.networkInterfaces()).flat()
       .filter((i) => i && (i.family === 'IPv4' || i.family === 4) && !i.internal).map((i) => i.address);
-    console.log('Claude Canlı çalışıyor. Telefondan aç (aynı Wi-Fi ya da Tailscale):');
+    console.log('Telefondan aç (aynı Wi-Fi ya da Tailscale):');
     for (const ip of ips) console.log(`  http://${ip}:${PORT}/#${token}`);
     console.log(`Bu bilgisayarda: http://localhost:${PORT}/#${token}`);
+  };
+  server.on('error', (e) => {
+    if (e.code !== 'EADDRINUSE') {
+      console.error(e.message);
+      process.exit(1);
+    }
+    // Hook sunucuyu arka planda başlatmış olabilir; bağlantıyı yine de göster.
+    console.log(`Port ${PORT} dolu: Claude Canlı zaten çalışıyor olabilir.`);
+    printLinks();
+    process.exit(0);
+  });
+  server.listen(PORT, HOST, () => {
+    console.log('Claude Canlı çalışıyor.');
+    printLinks();
   });
 }
 
