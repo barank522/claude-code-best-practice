@@ -10,19 +10,25 @@ Bağımlılık yok. Sadece Node.js (18+) gerekir.
 git clone -b claude/claude-activity-monitoring-ilsl36 https://github.com/barank522/claude-code-best-practice.git
 cd claude-code-best-practice/live-monitor
 node install.js   # hook'ları ~/.claude/settings.json'a ekler (önce .bak yedeği alır)
-node server.js    # paneli başlatır, bu terminal açık kalsın
+node server.js    # paneli başlatır ve telefon bağlantısını yazar
 ```
 
 `server.js` şöyle bir bağlantı yazar:
 
 ```
-Claude Canlı çalışıyor. Telefondan aç (aynı Wi-Fi ya da Tailscale):
+Telefondan aç (aynı Wi-Fi ya da Tailscale):
   http://192.168.1.23:7878/#k3m9xq2v7pna
 ```
 
 Bu bağlantıyı telefonda aç. Kod (`#` sonrası) telefona kaydedilir; sonra sadece `http://192.168.1.23:7878` yeter. Ana ekrana ekleyebilirsin.
 
 Açık Claude Code oturumlarını yeniden başlat; hook'lar yeni oturumlarda devreye girer.
+
+Sunucu kapalıysa her Claude Code oturumu açılışta onu arka planda kendisi başlatır. Terminali kapatsan da panel çalışır. Bağlantıyı tekrar görmek için `node server.js` yeter.
+
+## Bulut oturumları (claude.ai/code)
+
+Ortamın kurulum betiği (setup script) `install.js`'i çalıştırırsa panel her bulut oturumunda kendiliğinden açılır. Telefondan Claude uygulamasının önizleme (preview) bölmesinde, 7878 portunda görünür. Kod sorulursa Claude'a "panel kodu ne" de.
 
 ## Telefon nasıl bağlanır
 
