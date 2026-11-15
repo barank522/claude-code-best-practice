@@ -1,16 +1,16 @@
 #!/usr/bin/env node
-// Claude Code hook: olay JSON'unu Claude Canlı sunucusuna iletir. Hata vermez, Claude'u bekletmez.
+// Claude Code hook: olay JSON'unu Claude Canlı sunucusuna iletir, oturum açılışında sunucu kapalıysa başlatır.
+// Hata vermez, Claude'u bekletmez.
 'use strict';
 const fs = require('fs');
 const path = require('path');
 const http = require('http');
+const { spawn } = require('child_process');
 
-let token;
+let token = '';
 try {
   token = fs.readFileSync(path.join(__dirname, '.token'), 'utf8').trim();
-} catch {
-  process.exit(0); // sunucu hiç başlatılmamış
-}
+} catch {}
 
 // Bazı platformlarda stdin hiç kapanmaz; sonsuza kadar bekleme.
 setTimeout(() => process.exit(0), 3000).unref();
@@ -24,6 +24,12 @@ process.stdin.on('end', () => {
   } catch {
     return;
   }
+  // Ayrı süreç grubunda başlar; hook ve Claude kapansa da çalışmaya devam eder.
+  const start = () => {
+    if (p.hook_event_name !== 'SessionStart') return;
+    spawn(process.execPath, [path.join(__dirname, 'server.js')], { detached: true, stdio: 'ignore' }).unref();
+  };
+  if (!token) return start();
   delete p.tool_response; // dosya içerikleri vb. olabilir; panoya gerekmez
   const body = JSON.stringify(p);
   const req = http.request({
@@ -34,7 +40,9 @@ process.stdin.on('end', () => {
     timeout: 1500,
     headers: { 'content-type': 'application/json', 'content-length': Buffer.byteLength(body), 'x-live-token': token },
   });
-  req.on('error', () => {});
+  req.on('error', (e) => {
+    if (e.code === 'ECONNREFUSED') start();
+  });
   req.on('timeout', () => req.destroy());
   req.end(body);
 });
