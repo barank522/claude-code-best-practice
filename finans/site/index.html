@@ -1,4 +1,4 @@
-<title>Kasa Defteri</title>
+<title>APEX Varlık Yönetimi</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -115,13 +115,13 @@ footer { margin-top: 32px; font-size: 13px; color: var(--ink-3); display: grid; 
 
 <header class="top">
   <div class="wrap top-in">
-    <div class="brand"><span class="lira" aria-hidden="true">₺</span><h1>Kasa Defteri</h1></div>
+    <div class="brand"><span class="lira" aria-hidden="true">₺</span><h1>APEX</h1><span class="muted small">Özel Varlık Yönetimi A.Ş.</span></div>
     <span class="chip" id="srcChip">Örnek veri</span>
     <nav class="tabs" aria-label="Bölümler">
       <a href="#panel" data-tab="panel">Harcamalar</a>
       <a href="#borc" data-tab="borc">Borç planı</a>
       <a href="#birikim" data-tab="birikim">Birikim</a>
-      <a href="#ekip" data-tab="ekip">Ekibe sor</a>
+      <a href="#ekip" data-tab="ekip">Yönetim Kurulu</a>
     </nav>
   </div>
 </header>
@@ -225,17 +225,50 @@ footer { margin-top: 32px; font-size: 13px; color: var(--ink-3); display: grid; 
     <h2>Birikimin 5 yıllık seyri</h2>
     <div class="chart"><canvas id="cSave" role="img" aria-label="Birikimin hesapta görünen ve bugünün parasıyla değeri"></canvas></div>
   </div>
+  <div class="panel">
+    <h2>Portföy ve varlıklar</h2>
+    <p class="muted small">Yönetim Kurulu bu bilgileri de değerlendirir: Ceren döviz gelirini, Tolga fiziksel varlıkları, Mert ve Sinan mevcut yatırımları.</p>
+    <div class="fields">
+      <label class="field"><span>Aylık döviz geliri</span><input type="number" id="dovizAylik" min="0" step="50"></label>
+      <label class="field"><span>Döviz cinsi</span><select id="dovizBirim"><option>USD</option><option>EUR</option><option>GBP</option></select></label>
+      <label class="field"><span>Fiziksel varlıkların değeri (₺)</span><input type="number" id="fizikselDeger" min="0" step="1000"></label>
+      <label class="field"><span>Bunların aylık bakım/gideri (₺)</span><input type="number" id="fizikselBakim" min="0" step="100"></label>
+      <label class="field"><span>Risk profili</span><select id="riskProfil"><option value="muhafazakar">Muhafazakâr</option><option value="dengeli">Dengeli</option><option value="buyume">Büyüme</option><option value="agresif">Agresif</option></select></label>
+    </div>
+    <label class="field"><span>Mevcut yatırımlar (her satıra bir tane)</span>
+      <textarea id="yatirimlar" rows="3" placeholder="Örn. VOO 2 adet, maliyet 480 USD&#10;TEFAS hisse yoğun fon 20.000 ₺&#10;Gram altın 10 gr"></textarea></label>
+    <label class="field"><span>Fiziksel varlıklar (isteğe bağlı açıklama)</span>
+      <input type="text" id="fizikselAciklama" placeholder="Örn. 2019 model otomobil, oyun bilgisayarı"></label>
+  </div>
 </section>
 
 <section data-view="ekip" hidden>
   <div class="panel">
-    <span class="eyebrow">Dört uzman</span>
-    <h2>Bütçe analisti, borç uzmanı, yatırım danışmanı, gelir ve vergi uzmanı</h2>
-    <p class="muted">Ekip diğer sekmelerdeki özet rakamlarınıza bakar ve bu ay yapabileceğiniz adımları sıralar. Claude'a yalnızca özet gider: aylık toplamlar, kategori toplamları, borçlar ve birikim bilgileri. İşlem satırları ve açıklamaları gitmez.</p>
-    <label class="field"><span>Özellikle sormak istediğiniz bir şey var mı? (isteğe bağlı)</span>
-      <textarea id="question" rows="2" placeholder="Örn. Kredi kartı borcunu mu kapatayım, önce acil fon mu biriktireyim?"></textarea></label>
+    <span class="eyebrow">5 departman · 15 uzman</span>
+    <h2>Başkanım, masa hazır.</h2>
+    <p class="muted">Kerem (CIO) diğer sekmelerdeki rakamlarınızı departmanlara dağıtır ve TL bazında net bir aksiyon planı çıkarır. Claude'a yalnızca özet gider: aylık toplamlar, kategori toplamları, borçlar, birikim ve portföy bilgileri. İşlem satırları ve açıklamaları gitmez.</p>
+    <div class="fields">
+      <label class="field"><span>Toplantı türü</span>
+        <select id="mod">
+          <option value="toplanti">/toplantı · Tam strateji toplantısı</option>
+          <option value="departman">/departman · Tek departman, 3 uzman</option>
+          <option value="munazara">/münazara · Al mı, alma mı?</option>
+          <option value="butce">/bütçe · CFO Ofisi ve park planı</option>
+        </select></label>
+      <label class="field" id="depAlan" hidden><span>Departman</span>
+        <select id="depNo">
+          <option value="1">1 · Yönetim Kurulu (Kerem, Selin, Mert)</option>
+          <option value="2">2 · Hisse Masası (Onur, Zeynep, Kaan)</option>
+          <option value="3">3 · Fon, Emtia, Nakit (Elif, Burak, Deniz)</option>
+          <option value="4">4 · CFO Ofisi (Hakan, Ceren, Tolga)</option>
+          <option value="5">5 · Risk ve Vergi (Sinan, Aylin, Emre)</option>
+        </select></label>
+      <label class="field" id="aracAlan" hidden><span>Tartışılacak yatırım aracı</span><input type="text" id="arac" placeholder="Örn. QQQ, altın, ASELS, PPF"></label>
+    </div>
+    <label class="field"><span>Gündem veya soru (isteğe bağlı)</span>
+      <textarea id="question" rows="2" placeholder="Örn. Kart borcunu mu kapatalım, yoksa önce yedek akçe mi?"></textarea></label>
     <div class="btns">
-      <button class="primary" id="ask">Ekibe sor</button>
+      <button class="primary" id="ask">Toplantıyı başlat</button>
       <button id="stop" hidden>Durdur</button>
       <button id="again" hidden>Yeniden sor</button>
       <span class="note" id="askNote" role="status"></span>
@@ -248,8 +281,7 @@ footer { margin-top: 32px; font-size: 13px; color: var(--ink-3); display: grid; 
 </section>
 
 <footer>
-  <p>Kasa Defteri yatırım tavsiyesi vermez. Vergi konularında mali müşavire danışın.</p>
-  <p>Banka dökümleri bu tarayıcıda işlenir ve saklanmaz. Borç ve birikim bilgileriniz yalnızca bu tarayıcıda hatırlanır. <button class="link" id="forget">Hatırlananları sil</button></p>
+  <p>Banka dökümleri bu tarayıcıda işlenir ve saklanmaz. Borç, birikim ve portföy bilgileriniz yalnızca bu tarayıcıda hatırlanır. <button class="link" id="forget">Hatırlananları sil</button></p>
 </footer>
 </main>
 
@@ -461,15 +493,17 @@ const ORNEK_BORC = () => [
 ];
 const ORNEK_BIRIKIM = () => ({ needMonthly: null, fundMonths: 6, fundNow: 15000, goal: 250000, monthlySave: 8000, nominal: 40, inflation: 33 });
 
-const S = { islemler: [], kaynak: "ornek", dosyalar: [], ozet: null, borclar: ORNEK_BORC(), borcButce: null, birikim: ORNEK_BIRIKIM(), borcSonuc: [] };
-const KAYIT = "kasa-defteri-v1";
+const ORNEK_PORTFOY = () => ({ dovizAylik: 0, dovizBirim: "USD", fizikselDeger: 0, fizikselBakim: 0, riskProfil: "dengeli", yatirimlar: "", fizikselAciklama: "" });
+const PORTFOY_ALAN = Object.keys(ORNEK_PORTFOY());
+const S = { islemler: [], kaynak: "ornek", dosyalar: [], ozet: null, borclar: ORNEK_BORC(), borcButce: null, birikim: ORNEK_BIRIKIM(), portfoy: ORNEK_PORTFOY(), borcSonuc: [] };
+const KAYIT = "kasa-defteri-v1"; // eski ad korunur: önceki sürümde kaydedilen veriler kaybolmasın
 function kaydet() {
-  try { localStorage.setItem(KAYIT, JSON.stringify({ borclar: S.borclar, borcButce: S.borcButce, birikim: S.birikim })); } catch { /* depolama kapalı */ }
+  try { localStorage.setItem(KAYIT, JSON.stringify({ borclar: S.borclar, borcButce: S.borcButce, birikim: S.birikim, portfoy: S.portfoy })); } catch { /* depolama kapalı */ }
 }
 function yukleKayit() {
   try {
     const d = JSON.parse(localStorage.getItem(KAYIT) || "null");
-    if (d) { if (Array.isArray(d.borclar)) S.borclar = d.borclar; S.borcButce = d.borcButce ?? null; Object.assign(S.birikim, d.birikim || {}); }
+    if (d) { if (Array.isArray(d.borclar)) S.borclar = d.borclar; S.borcButce = d.borcButce ?? null; Object.assign(S.birikim, d.birikim || {}); Object.assign(S.portfoy, d.portfoy || {}); }
   } catch { /* yok say */ }
 }
 
@@ -701,36 +735,78 @@ function ozetVeri() {
     borca_ayrilan_aylik: yuv(num($("debtBudget").value)),
     borc_planlari: S.borcSonuc.map(y => ({ yol: y.ad, biter_mi: y.r.biter, ay: y.r.ay, toplam_faiz: yuv(y.r.faizTop) })),
     acil_fon: { mevcut: yuv(B.fundNow), hedef_ay: B.fundMonths, aylik_zorunlu_gider: yuv(B.needMonthly ?? o.ortGider) },
-    birikim: { hedef: yuv(B.goal), aylik: yuv(B.monthlySave), kullanicinin_girdigi_yillik_getiri_yuzde: B.nominal, kullanicinin_girdigi_yillik_enflasyon_yuzde: B.inflation }
+    birikim: { hedef: yuv(B.goal), aylik: yuv(B.monthlySave), kullanicinin_girdigi_yillik_getiri_yuzde: B.nominal, kullanicinin_girdigi_yillik_enflasyon_yuzde: B.inflation },
+    portfoy: {
+      risk_profili: S.portfoy.riskProfil,
+      aylik_doviz_geliri: S.portfoy.dovizAylik ? `${S.portfoy.dovizAylik} ${S.portfoy.dovizBirim}` : "yok",
+      fiziksel_varliklar: { toplam_deger_tl: yuv(S.portfoy.fizikselDeger), aylik_bakim_tl: yuv(S.portfoy.fizikselBakim), aciklama: S.portfoy.fizikselAciklama || "" },
+      mevcut_yatirimlar: S.portfoy.yatirimlar.split("\n").map(s => s.trim()).filter(Boolean)
+    }
   };
 }
-function istem() {
-  const soru = $("question").value.trim();
-  return `Sen dört kişilik bir kişisel finans ekibisin: Bütçe Analisti, Borç Uzmanı, Yatırım ve Birikim Danışmanı, Gelir ve Vergi Uzmanı. Kullanıcı Türkiye'de yaşıyor; para birimi TL. Türkçe yaz.
+
+const KADRO = `APEX Özel Varlık Yönetimi A.Ş.'sin: tek bir müşterinin servetini sıfırdan zirveye taşımak için kurulmuş özel bir varlık yönetim şirketi ve hedge fonu. Kullanıcı Yönetim Kurulu Başkanı ve tek sahibi; ona "Başkanım" de. Türkçe yaz. Kullanıcı Türkiye'de yaşıyor; para birimi TL.
+
+Kadro:
+1. Ekip – Makro Strateji ve Yönetim Kurulu: Kerem (CIO, son kararı verir), Selin (küresel makroekonomist: FED, TCMB, enflasyon, kur), Mert (varlık dağılım mimarı: ABD borsası/BIST/TEFAS/emtia/nakit yüzdeleri).
+2. Ekip – Hisse Masası: Onur (Wall Street, teknoloji, ABD ETF'leri), Zeynep (BIST temel analiz: F/K, PD/DD, FD/FAVÖK, temettü), Kaan (teknik analiz: destek-direnç, RSI/MACD, kademeli alım).
+3. Ekip – Fon, Emtia, Sabit Getiri: Elif (TEFAS fonları), Burak (altın, gümüş, emtia), Deniz (para piyasası fonu, Eurobond, döviz, nakit park).
+4. Ekip – CFO Ofisi: Hakan (bütçe, sızıntılar, borç, aylık tohum sermaye), Ceren (gelir artırma, döviz gelirini komisyonsuz yatırıma taşıma), Tolga (fiziksel varlıkların bakım maliyeti, değer kaybı, fırsat maliyeti).
+5. Ekip – Risk, Denetim, Vergi: Sinan (CRO, stres testi, yığılma sınırı, yedek akçe), Aylin (stopaj, beyan, komisyon; net kâr), Emre (FOMO ve panik satışına karşı disiplin).
 
 Kurallar:
-- Yalnızca aşağıdaki verideki rakamları kullan. Veride olmayan bir rakamı uydurma; eksikse "veri yok" de.
-- Güncel faiz, TÜFE, BES devlet katkısı oranı veya vergi dilimi bilmiyorsun. Bunlardan söz edeceksen "güncel değeri kontrol edin" de; rakam uydurma.
-- Belirli hisse, coin veya fon adı verme; al/sat sinyali verme. Varlık sınıfı düzeyinde konuş (mevduat, para piyasası fonu, altın, döviz, BES, endeks fonu).
-- Öncelik: yüksek faizli borç > 1 aylık gider kadar mini acil fon > kalan borç > 3-6 aylık acil fon > uzun vadeli yatırım. Önerilerin toplamı aylık artıyı aşmasın.
-- Reel getiri = (1+nominal)/(1+enflasyon)-1.
-- MLM, kaldıraçlı forex/kripto, "garanti kazanç" önerme.
-- Veri kaynağı "ÖRNEK" ise cevabın başında bunun örnek veri olduğunu bir cümleyle söyle.
+- Net yüzde, net TL, net araç adı ver. Hisse, ETF ve TEFAS fon kodu verebilirsin. Kaçamak cümle yasak: "yatırım tavsiyesi değildir", "piyasa yükselebilir de düşebilir de", "bir uzmana danışın" yazma. Riski Sinan'ın stres testiyle, rakamla anlat.
+- Bu sayfanın internet erişimi yok; güncel fiyat, F/K, RSI, faiz, kur, TÜFE ve stopaj oranını bilmiyorsun. Bu rakamları uydurma. Gerektiğinde "güncel veri yok" de ve koşullu kural ver (ör. "RSI 30 altına inerse üç kademede al", "PPF getirisi TÜFE'nin altındaysa ağırlığı azalt"). Tarihsel bilgiyi "tarihsel" diye işaretle.
+- Yalnızca aşağıdaki VERİ'deki kişisel rakamları kullan; hesapladığın her şeyi bu rakamlardan türet.
+- Öncelik: yüksek faizli borç, sonra yedek akçe, sonra yatırım. Aylık dağıtım toplamı aylık artıyı, yüzde toplamı 100'ü aşmaz.
+- Sermaye küçükse agresif birikim ve komisyon optimizasyonu; sermaye ve döviz geliri büyükse küresel çeşitlendirme ve nakit akışı.
+- Alım-satım emri vermezsin; planı Başkan uygular.
+- VERİ kaynağı "ÖRNEK" ise ilk cümlede bunun örnek veri olduğunu söyle.`;
 
-Biçim (Markdown, tam olarak bu başlıklar):
-## Özet
-İki cümle: durum ve en büyük fırsat.
-## Bütçe Analisti
-## Borç Uzmanı
-## Yatırım ve Birikim Danışmanı
-## Gelir ve Vergi Uzmanı
-Her uzman en fazla 3 madde yazar. Her madde: **Bulgu** (rakamla) – **Eylem** (tek somut adım) – **Aylık etki** (₺ veya "ölçülemedi").
-## Bu ay yapılacak 5 şey
-Numaralı liste, etkisi en büyükten küçüğe.
-Son satır: "Bu analiz yatırım tavsiyesi değildir; vergi için mali müşavire danışın."
-${soru ? `\nKullanıcının sorusu (ilgili uzmanın bölümünde ve Özet'te yanıtla): ${soru}\n` : ""}
+const BICIM = {
+  toplanti: () => `Görev: tam strateji toplantısı. Beş departman konuyu kendi açısından değerlendirir; her departman 3 uzmanının görüşünü tek raporda birleştirir ve görüşün sahibini parantezle anar. Tam olarak şu başlıklar, bu sırayla:
+## [4. EKİP – CFO OFİSİ RAPORU]
+## [2. & 3. EKİP – PİYASA VE ARAÇLAR MASASI]
+## [5. EKİP – RİSK VE VERGİ DENETİMİ]
+## [1. EKİP – YÖNETİM KURULU KARARI (NET AKSİYON)]
+Son bölüm: Selin'in iki cümlelik makro onayı, Mert'in dağılım tablosu (sınıf, %, bu ay TL), sonra Kerem'in numaralı uygulama planı (en fazla 7 madde; her madde: ne, araç, TL, %, ne zaman, giriş kuralı).`,
+  departman: n => {
+    const d = { 1: "1. Ekip – Yönetim Kurulu: Selin, Mert, Kerem", 2: "2. Ekip – Hisse Masası: Onur, Zeynep, Kaan", 3: "3. Ekip – Fon, Emtia, Sabit Getiri: Elif, Burak, Deniz", 4: "4. Ekip – CFO Ofisi: Hakan, Ceren, Tolga", 5: "5. Ekip – Risk, Denetim, Vergi: Sinan, Aylin, Emre" }[n];
+    return `Görev: yalnızca ${d} toplanır. Diğer departmanlar konuşmaz. Üç uzman ayrı başlıklarla, isimleriyle söz alır (## <İsim> – <unvan>), birbirinin görüşüne yanıt verir, itiraz eder; konuyu en ince ayrıntısına kadar tartışır. Sonda "## Departman Sonucu": madde madde, TL ve %.`;
+  },
+  munazara: arac => `Görev: münazara. Araç: ${arac || "(Başkan araç belirtmedi; en çok tartışılması gereken aracı sen seç ve adını söyle)"}. Tam olarak şu başlıklar:
+## [2. EKİP – SAVUNMA: NEDEN ALMALIYIZ]
+Onur, Zeynep ve Kaan en güçlü 3 argümanı rakamla savunur; önerdikleri pay ve giriş kuralı.
+## [5. EKİP – İTİRAZ: NEDEN ALMAMALIYIZ]
+Sinan, Aylin ve Emre sertçe itiraz eder: stres testi (TL kayıp), vergi/komisyon yükü, davranış tuzağı.
+## [CIO KEREM – SON SÖZ]
+AL, ALMA ya da KOŞULLU AL. Koşulluysa koşul, pay (%), aylık TL ve giriş kuralı.`,
+  butce: () => `Görev: bütçe masası. Yalnızca 4. Ekip (Hakan, Ceren, Tolga) ve 3. Ekip (Elif, Burak, Deniz) konuşur. Tam olarak şu başlıklar:
+## [4. EKİP – CFO OFİSİ RAPORU]
+Sızıntılar ve her biri için kesinti hedefi (TL); kira, temel beslenme, sağlık ve gelişime dokunma. Ceren'in döviz/gelir notu, Tolga'nın fiziksel varlık maliyeti. Sonda aylık artı ve tohum sermaye.
+## [3. EKİP – PARK PLANI]
+Artan paranın kuruşu kuruşuna nereye park edileceği. Sonda tablo: kalem, aylık TL, araç. Toplam aylık artıya eşit.`
+};
+
+function istem() {
+  const soru = $("question").value.trim();
+  const mod = $("mod").value;
+  const bicim = mod === "departman" ? BICIM.departman($("depNo").value) : mod === "munazara" ? BICIM.munazara($("arac").value.trim()) : BICIM[mod]();
+  return `Sen ${KADRO}
+
+${bicim}
+${soru ? `\nBaşkan'ın gündemi: ${soru}\n` : ""}
 VERİ (JSON):
 ${JSON.stringify(ozetVeri(), null, 2)}`;
+}
+function modDegisti() {
+  const mod = $("mod").value;
+  $("depAlan").hidden = mod !== "departman";
+  $("aracAlan").hidden = mod !== "munazara";
+  onizleme();
+}
+function portfoyDoldur() {
+  for (const k of PORTFOY_ALAN) $(k).value = S.portfoy[k] ?? "";
 }
 function onizleme() { if (S.ozet) $("sentPreview").textContent = istem(); }
 
@@ -770,7 +846,7 @@ async function sor(yeniden) {
   ctl = new AbortController();
   $("ask").disabled = true; $("again").hidden = true; $("stop").hidden = false; $("askNote").textContent = "";
   $("answerPanel").hidden = false;
-  const out = $("answer"); out.className = "answer thinking"; out.textContent = "Ekip düşünüyor… İlk yanıt 30-60 saniye sürebilir.";
+  const out = $("answer"); out.className = "answer thinking"; out.textContent = "Departmanlar toplanıyor… İlk yanıt 30-60 saniye sürebilir.";
   try {
     const { truncated } = await sample(istem(), {
       signal: ctl.signal, modelTier: "default", ...(yeniden ? { cache: false } : {}),
@@ -815,13 +891,21 @@ function baslat() {
   ["dragleave", "drop"].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove("over"); }));
   drop.addEventListener("drop", e => dosyalariOku(e.dataTransfer.files));
   $("question").addEventListener("input", onizleme);
+  portfoyDoldur();
+  for (const k of PORTFOY_ALAN) $(k).addEventListener("input", () => {
+    S.portfoy[k] = $(k).type === "number" ? Math.max(0, num($(k).value)) : $(k).value;
+    kaydet(); onizleme();
+  });
+  $("mod").addEventListener("change", modDegisti);
+  $("depNo").addEventListener("change", onizleme);
+  $("arac").addEventListener("input", onizleme);
   $("ask").addEventListener("click", () => sor(false));
   $("again").addEventListener("click", () => sor(true));
   $("stop").addEventListener("click", () => ctl?.abort());
   $("forget").addEventListener("click", () => {
     try { localStorage.removeItem(KAYIT); } catch { /* yok */ }
-    S.borclar = ORNEK_BORC(); S.borcButce = null; S.birikim = ORNEK_BIRIKIM();
-    birikimDoldur(); tumunuCiz(); $("forget").textContent = "Silindi";
+    S.borclar = ORNEK_BORC(); S.borcButce = null; S.birikim = ORNEK_BIRIKIM(); S.portfoy = ORNEK_PORTFOY();
+    birikimDoldur(); portfoyDoldur(); tumunuCiz(); $("forget").textContent = "Silindi";
   });
   addEventListener("hashchange", yonlendir);
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", tumunuCiz);
@@ -832,7 +916,7 @@ function baslat() {
   const kullan = window.claude?.use ? window.claude.use("sample") : Promise.resolve(null);
   kullan.then(s => {
     sample = s;
-    if (!s) { $("ask").hidden = true; $("askNote").textContent = "Ekibe sor yalnızca claude.ai içinde çalışır. Diğer sekmeler her yerde çalışır."; return; }
+    if (!s) { $("ask").hidden = true; $("askNote").textContent = "Yönetim Kurulu yalnızca claude.ai içinde toplanır. Diğer sekmeler her yerde çalışır."; return; }
     $("ask").disabled = false; $("askNote").textContent = "";
   }).catch(() => { $("ask").hidden = true; $("askNote").textContent = "Claude bağlantısı kurulamadı."; });
 }
