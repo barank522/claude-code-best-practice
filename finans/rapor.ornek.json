@@ -1,0 +1,16 @@
+{
+  "tarih": "2026-11-16",
+  "ozet_cumle": "Örnek: aylık 20.588 TL artı var; en pahalı kalem %4,25 faizli kredi kartı borcu.",
+  "net_varlik": { "varliklar": 98000, "borclar": 150000, "net": -52000 },
+  "eylemler": [
+    { "oncelik": 1, "alan": "borç", "eylem": "Kredi kartı borcunu asgari değil tam ödeyecek şekilde artı nakdi karta yönlendir.", "aylik_tl_etkisi": 1275 },
+    { "oncelik": 2, "alan": "birikim", "eylem": "1 aylık gider kadar mini acil fonu para piyasası fonunda tut.", "aylik_tl_etkisi": 0 },
+    { "oncelik": 3, "alan": "bütçe", "eylem": "Kullanılmayan abonelikleri iptal et.", "aylik_tl_etkisi": 230 }
+  ],
+  "borc_plani": [
+    { "ay": "2026-12", "kalan_borc": 140000 },
+    { "ay": "2027-01", "kalan_borc": 128000 },
+    { "ay": "2027-02", "kalan_borc": 115000 }
+  ],
+  "uyari": "Bu rapor yatırım tavsiyesi değildir. Vergi konularında mali müşavire danışın."
+}
