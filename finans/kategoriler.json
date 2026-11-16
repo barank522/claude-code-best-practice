@@ -1,0 +1,18 @@
+{
+  "Maaş": ["maaş", "maas", "ücret ödemesi", "bordro"],
+  "Kira": ["kira"],
+  "Faturalar": ["elektrik", "doğalgaz", "dogalgaz", "igdaş", "su idaresi", "iski", "aski", "turkcell", "vodafone", "türk telekom", "turk telekom", "superonline", "fatura"],
+  "Market": ["migros", "a101", "bim", "şok", "sok market", "carrefour", "file market", "macrocenter", "market"],
+  "Yemek": ["yemeksepeti", "getir", "trendyol yemek", "restoran", "restaurant", "cafe", "kahve", "starbucks", "burger", "pizza", "lokanta"],
+  "Ulaşım": ["istanbulkart", "ankarakart", "akaryakıt", "akaryakit", "shell", "opet", "petrol ofisi", "uber", "bitaksi", "otopark", "hgs", "ogs"],
+  "Abonelik": ["netflix", "spotify", "youtube", "disney", "amazon prime", "exxen", "blutv", "icloud", "google one", "apple.com", "chatgpt", "claude"],
+  "Alışveriş": ["trendyol", "hepsiburada", "amazon", "n11", "zara", "lc waikiki", "defacto", "teknosa", "mediamarkt"],
+  "Sağlık": ["eczane", "hastane", "klinik", "doktor"],
+  "Eğitim": ["kurs", "udemy", "okul", "kitap"],
+  "Kredi kartı ödemesi": ["kredi kartı ödeme", "kredi karti odeme", "kart borcu", "kk ödeme"],
+  "Kredi taksiti": ["kredi taksit", "taksit tahsilat", "ihtiyaç kredisi"],
+  "Faiz / komisyon": ["faiz", "komisyon", "kkdf", "bsmv", "gecikme", "hesap işletim"],
+  "Yatırım / birikim": ["bes katkı", "bireysel emeklilik", "fon alış", "altın alış", "döviz alış", "vadeli"],
+  "Nakit çekim": ["atm", "nakit çekim", "para çekme"],
+  "Transfer": ["eft", "havale", "fast"]
+}
