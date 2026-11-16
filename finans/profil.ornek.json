@@ -21,5 +21,17 @@
   "hedefler": [
     { "ad": "Acil durum fonu", "tutar": 150000, "tarih": "2027-12" }
   ],
-  "risk_profili": "dengeli"
+  "risk_profili": "dengeli",
+  "doviz_gelirleri": [
+    { "ad": "Yurt dışı serbest iş", "birim": "USD", "aylik": 400, "kanal": "banka havalesi" }
+  ],
+  "fiziksel_varliklar": [
+    { "ad": "Otomobil", "deger": 650000, "aylik_bakim": 4500, "yillik_deger_kaybi_yuzde": 8 },
+    { "ad": "Dizüstü bilgisayar", "deger": 45000, "aylik_bakim": 0, "yillik_deger_kaybi_yuzde": 25 }
+  ],
+  "portfoy": [
+    { "arac": "VOO", "tur": "abd_etf", "adet": 2, "maliyet_usd": 480 },
+    { "arac": "Örnek TEFAS hisse yoğun fon", "tur": "tefas_fon", "tutar": 20000 }
+  ],
+  "araci_kurum_komisyonu": { "bist_binde": 2, "abd_islem_basi_usd": 1.5 }
 }
