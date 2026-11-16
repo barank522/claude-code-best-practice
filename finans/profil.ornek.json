@@ -1,0 +1,25 @@
+{
+  "guncelleme": "2026-11-16",
+  "calisma_sekli": "bordrolu",
+  "aylik_net_gelir": 45000,
+  "ek_gelirler": [
+    { "ad": "Serbest iş", "aylik": 5000 }
+  ],
+  "beceriler": ["yazılım", "İngilizce"],
+  "haftalik_ayrilabilir_saat": 5,
+  "bakmakla_yukumlu_kisi": 0,
+  "borclar": [
+    { "ad": "Örnek Bank kredi kartı", "tur": "kredi_karti", "bakiye": 30000, "aylik_faiz_yuzde": 4.25, "asgari_odeme": 12000 },
+    { "ad": "İhtiyaç kredisi", "tur": "kredi", "bakiye": 120000, "aylik_faiz_yuzde": 3.5, "taksit": 8500, "kalan_taksit": 18 }
+  ],
+  "varliklar": [
+    { "ad": "Vadesiz hesap", "tur": "nakit_tl", "tutar": 12000 },
+    { "ad": "Gram altın", "tur": "altin", "gram": 10 },
+    { "ad": "Dolar", "tur": "doviz", "birim": "USD", "miktar": 500 },
+    { "ad": "BES", "tur": "bes", "tutar": 40000, "devlet_katkisi": 8000, "baslangic": "2023-05" }
+  ],
+  "hedefler": [
+    { "ad": "Acil durum fonu", "tutar": 150000, "tarih": "2027-12" }
+  ],
+  "risk_profili": "dengeli"
+}
