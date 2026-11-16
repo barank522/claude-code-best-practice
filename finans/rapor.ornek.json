@@ -1,16 +1,26 @@
 {
   "tarih": "2026-11-16",
-  "ozet_cumle": "Örnek: aylık 20.588 TL artı var; en pahalı kalem %4,25 faizli kredi kartı borcu.",
+  "ozet_cumle": "Örnek: aylık 20.588 TL artı var; önce %4,25 aylık faizli kart borcu kapanır, sonra yedek akçe kurulur.",
   "net_varlik": { "varliklar": 98000, "borclar": 150000, "net": -52000 },
+  "dagilim": [
+    { "sinif": "Borç kapatma", "yuzde": 60, "tl": 12350 },
+    { "sinif": "Yedek akçe (para piyasası fonu)", "yuzde": 25, "tl": 5150 },
+    { "sinif": "ABD ETF", "yuzde": 10, "tl": 2060 },
+    { "sinif": "Altın", "yuzde": 5, "tl": 1028 }
+  ],
   "eylemler": [
-    { "oncelik": 1, "alan": "borç", "eylem": "Kredi kartı borcunu asgari değil tam ödeyecek şekilde artı nakdi karta yönlendir.", "aylik_tl_etkisi": 1275 },
-    { "oncelik": 2, "alan": "birikim", "eylem": "1 aylık gider kadar mini acil fonu para piyasası fonunda tut.", "aylik_tl_etkisi": 0 },
-    { "oncelik": 3, "alan": "bütçe", "eylem": "Kullanılmayan abonelikleri iptal et.", "aylik_tl_etkisi": 230 }
+    { "oncelik": 1, "departman": "4. Ekip", "eylem": "Kart borcuna asgarinin üstünde 12.350 TL öde.", "tl": 12350, "yuzde": 60 },
+    { "oncelik": 2, "departman": "3. Ekip", "eylem": "5.150 TL'yi para piyasası fonuna koy; hedef 1 aylık gider.", "tl": 5150, "yuzde": 25 },
+    { "oncelik": 3, "departman": "2. Ekip", "eylem": "2.060 TL ile ABD endeks ETF'ine aylık otomatik alım başlat.", "tl": 2060, "yuzde": 10 },
+    { "oncelik": 4, "departman": "3. Ekip", "eylem": "1.028 TL'yi altın fonuna yatır.", "tl": 1028, "yuzde": 5 }
   ],
   "borc_plani": [
     { "ay": "2026-12", "kalan_borc": 140000 },
     { "ay": "2027-01", "kalan_borc": 128000 },
     { "ay": "2027-02", "kalan_borc": 115000 }
   ],
-  "uyari": "Bu rapor yatırım tavsiyesi değildir. Vergi konularında mali müşavire danışın."
+  "stres_testi": [
+    { "senaryo": "Nasdaq −%35 (varsayım)", "tl_kayip": 721, "yuzde_kayip": 3.5 },
+    { "senaryo": "Gelir 3 ay kesilir", "tl_kayip": 61000, "yuzde_kayip": 62 }
+  ]
 }
