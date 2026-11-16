@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finans Paneli</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --text:#1d2330; --muted:#5d6678; --line:#e3e6ec;
+          --gelir:#1f8a5b; --gider:#c2453a; --vurgu:#2f5fd0; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#12151b; --card:#1b2029; --text:#e8ebf1; --muted:#9aa3b5; --line:#2b3240;
+            --gelir:#3fbf86; --gider:#e86b5f; --vurgu:#6f95ff; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:15px/1.5 system-ui, sans-serif; }
+  main { max-width:1100px; margin:0 auto; padding:24px 16px 48px; }
+  h1 { margin:0 0 4px; font-size:24px; }
+  .alt { color:var(--muted); margin:0 0 20px; }
+  .grid { display:grid; gap:16px; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); }
+  .kart { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; min-width:0; }
+  .kart h2 { margin:0 0 12px; font-size:16px; }
+  .rakamlar { display:grid; gap:12px; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); margin-bottom:16px; }
+  .rakam .etiket { color:var(--muted); font-size:13px; }
+  .rakam .deger { font-size:22px; font-weight:600; font-variant-numeric:tabular-nums; }
+  .pozitif { color:var(--gelir); } .negatif { color:var(--gider); }
+  table { width:100%; border-collapse:collapse; }
+  th, td { text-align:left; padding:8px 6px; border-bottom:1px solid var(--line); vertical-align:top; }
+  td.sayi, th.sayi { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .tam { grid-column:1 / -1; }
+  .hata { background:var(--card); border:1px solid var(--gider); border-radius:12px; padding:16px; }
+  .uyari { color:var(--muted); font-size:13px; margin-top:24px; }
+  canvas { max-height:300px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Finans Paneli</h1>
+  <p class="alt" id="donem">Yükleniyor…</p>
+  <div id="hata"></div>
+  <section class="rakamlar" id="rakamlar"></section>
+  <section class="grid">
+    <div class="kart tam" id="eylemKart" hidden><h2>Öncelikli eylemler</h2><table id="eylemler"></table></div>
+    <div class="kart"><h2>Aylık gelir / gider</h2><canvas id="aylikGrafik"></canvas></div>
+    <div class="kart"><h2>Gider kategorileri</h2><canvas id="kategoriGrafik"></canvas></div>
+    <div class="kart" id="borcKart" hidden><h2>Borç kapanış planı</h2><canvas id="borcGrafik"></canvas></div>
+    <div class="kart" id="abonelikKart" hidden><h2>Tekrarlayan ödemeler</h2><table id="abonelikler"></table></div>
+  </section>
+  <p class="uyari" id="uyari">Bu panel yatırım tavsiyesi değildir.</p>
+</main>
+<script>
+const TL = new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY", maximumFractionDigits: 0 });
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const el = (tag, text, cls) => { const e = document.createElement(tag); if (text != null) e.textContent = text; if (cls) e.className = cls; return e; };
+
+async function yukle(yol) {
+  try { const r = await fetch(yol, { cache: "no-store" }); return r.ok ? await r.json() : null; }
+  catch { return null; }
+}
+
+function rakam(etiket, deger, isaretli) {
+  const k = el("div", null, "kart rakam");
+  k.append(el("div", etiket, "etiket"),
+           el("div", TL.format(deger), "deger" + (isaretli ? (deger >= 0 ? " pozitif" : " negatif") : "")));
+  document.getElementById("rakamlar").append(k);
+}
+
+function satirlar(tablo, baslik, veri) {
+  const t = document.getElementById(tablo);
+  const tr = el("tr"); baslik.forEach(([b, sayi]) => tr.append(el("th", b, sayi ? "sayi" : ""))); t.append(tr);
+  veri.forEach(s => { const r = el("tr"); s.forEach(([v, sayi]) => r.append(el("td", v, sayi ? "sayi" : ""))); t.append(r); });
+}
+
+(async () => {
+  const [ozet, rapor] = await Promise.all([yukle("veri/ozet.json"), yukle("veri/rapor.json")]);
+  if (!ozet) {
+    const h = el("div", null, "hata");
+    h.append(el("strong", "veri/ozet.json bulunamadı. "),
+             document.createTextNode("Önce /finans-ekibi çalıştırın, sonra paneli finans/ klasöründen sunun: python3 -m http.server 8765 -d finans"));
+    document.getElementById("hata").append(h);
+    document.getElementById("donem").textContent = "";
+    return;
+  }
+  Chart.defaults.color = css("--muted"); Chart.defaults.borderColor = css("--line");
+
+  const d = ozet.donem;
+  document.getElementById("donem").textContent =
+    `${d ? d.baslangic + " – " + d.bitis : ""} · ${ozet.islem_sayisi} işlem` + (rapor ? ` · rapor ${rapor.tarih}` : "");
+
+  rakam("Aylık ort. gelir", ozet.aylik_ort_gelir);
+  rakam("Aylık ort. gider", ozet.aylik_ort_gider);
+  rakam("Aylık artı", ozet.aylik_ort_gelir - ozet.aylik_ort_gider, true);
+  if (rapor?.net_varlik) rakam("Net varlık", rapor.net_varlik.net, true);
+
+  const aylar = Object.keys(ozet.aylik);
+  new Chart(document.getElementById("aylikGrafik"), {
+    type: "bar",
+    data: { labels: aylar, datasets: [
+      { label: "Gelir", data: aylar.map(a => ozet.aylik[a].gelir), backgroundColor: css("--gelir") },
+      { label: "Gider", data: aylar.map(a => ozet.aylik[a].gider), backgroundColor: css("--gider") } ] },
+    options: { plugins: { tooltip: { callbacks: { label: c => `${c.dataset.label}: ${TL.format(c.raw)}` } } },
+               scales: { y: { ticks: { callback: v => TL.format(v) } } } }
+  });
+
+  const kat = Object.entries(ozet.kategoriler);
+  const ilk = kat.slice(0, 7), digerToplam = kat.slice(7).reduce((t, [, v]) => t + v, 0);
+  if (digerToplam) ilk.push(["Diğer", digerToplam]);
+  new Chart(document.getElementById("kategoriGrafik"), {
+    type: "doughnut",
+    data: { labels: ilk.map(k => k[0]), datasets: [{ data: ilk.map(k => k[1]), borderColor: css("--card"),
+      backgroundColor: ["#2f5fd0", "#c2453a", "#1f8a5b", "#d08a1f", "#7a4fd0", "#1f9bb0", "#b04f8a", "#7d8597"] }] },
+    options: { plugins: { legend: { position: "bottom" },
+               tooltip: { callbacks: { label: c => `${c.label}: ${TL.format(c.raw)}` } } } }
+  });
+
+  if (ozet.abonelik_adaylari?.length) {
+    document.getElementById("abonelikKart").hidden = false;
+    satirlar("abonelikler", [["Açıklama"], ["Ay", true], ["Tutar", true]],
+      ozet.abonelik_adaylari.map(a => [[a.aciklama], [String(a.ay_sayisi), true], [TL.format(a.tutar), true]]));
+  }
+
+  if (rapor?.eylemler?.length) {
+    document.getElementById("eylemKart").hidden = false;
+    satirlar("eylemler", [["#"], ["Alan"], ["Eylem"], ["Aylık etki", true]],
+      [...rapor.eylemler].sort((a, b) => a.oncelik - b.oncelik)
+        .map(e => [[String(e.oncelik)], [e.alan], [e.eylem], [TL.format(e.aylik_tl_etkisi || 0), true]]));
+  }
+
+  if (rapor?.borc_plani?.length) {
+    document.getElementById("borcKart").hidden = false;
+    new Chart(document.getElementById("borcGrafik"), {
+      type: "line",
+      data: { labels: rapor.borc_plani.map(b => b.ay),
+              datasets: [{ label: "Kalan borç", data: rapor.borc_plani.map(b => b.kalan_borc),
+                           borderColor: css("--vurgu"), backgroundColor: css("--vurgu"), tension: .2 }] },
+      options: { plugins: { legend: { display: false },
+                            tooltip: { callbacks: { label: c => TL.format(c.raw) } } },
+                 scales: { y: { beginAtZero: true, ticks: { callback: v => TL.format(v) } } } }
+    });
+  }
+
+  if (rapor?.uyari) document.getElementById("uyari").textContent = rapor.uyari;
+})();
+</script>
+</body>
+</html>
