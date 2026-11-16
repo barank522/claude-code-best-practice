@@ -10,3 +10,4 @@ plan/
 
 # Kişisel finans verisi (banka dökümleri, profil, raporlar) — asla commit etme
 finans/veri/
+__pycache__/
